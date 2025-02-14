@@ -18,7 +18,7 @@ A simple weather dashboard built with Flask that fetches weather data from the O
 
 Clone the repository:
 ```bash
-git clone https://github.com/your-username/weather-dashboard.git
+git clone https://github.com/Souvik8426/Weather_Dashboard.git
 cd weather-dashboard
 ```
 
@@ -61,10 +61,6 @@ Serves the main HTML page.
 GET /get_weather  
 Retrieves weather data for the specified city via the query parameter "city".
 Example: http://localhost:5000/get_weather?city=Delhi
-
-## License
-
-This project is licensed under the MIT License.
 
 ## Acknowledgements
 

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* Global Styles */
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      color: #f0f0f0;
+    }
+
+    h1,
+    h2,
+    h5,
+    p,
+    small,
+    .badge {
+      font-weight: 400;
+    }
+
+    /* Custom Card */
+    .custom-card {
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+    }
+
+    /* Input Field */
+    .form-control {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+      padding: 0.8rem;
+    }
+
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      box-shadow: none;
+      color: #fff;
+    }
+
+    /* Search Button */
+    .btn-search {
+      background: linear-gradient(135deg, #00b4d8, #0077b6);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .btn-search:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Popular Cities Badges */
+    .popular-cities {
+      cursor: pointer;
+      transition: all 0.3s;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      font-size: 0.9rem;
+    }
+
+    .popular-cities:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Weather Icon and its Container */
+    .icon-container {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      display: inline-block;
+      padding: 15px;
+      margin-bottom: 1rem;
+    }
+
+    .weather-icon {
+      width: 120px;
+      height: 120px;
+      filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.3));
+    }
+
+    /* City Title */
+    .city-title {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Weather Details Card */
+    .weather-details .card {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .temperature-value {
+      font-size: 3rem;
+      font-weight: 300;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-5">
+    <h1 class="text-center mb-4">Weather Dashboard</h1>
+
+    <!-- Search Card -->
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-8">
+        <div class="custom-card">
+          <div class="input-group mb-3">
+            <input type="text" id="cityInput" class="form-control form-control-lg" placeholder="Enter city name..." />
+            <button class="btn btn-search btn-lg" type="button" onclick="searchCity()">
+              <i class="fas fa-search"></i> Search
+            </button>
+          </div>
+          <div class="popular-cities-container">
+            <h5 class="mb-3">Popular Cities:</h5>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge popular-cities p-2" onclick="searchCity('Mumbai')">Mumbai</span>
+              <span class="badge popular-cities p-2" onclick="searchCity('Delhi')">Delhi</span>
+              <span class="badge popular-cities p-2" onclick="searchCity('Bangalore')">Bangalore</span>
+              <span class="badge popular-cities p-2" onclick="searchCity('Chennai')">Chennai</span>
+              <span class="badge popular-cities p-2" onclick="searchCity('Kolkata')">Kolkata</span>
+              <span class="badge popular-cities p-2" onclick="searchCity('Hyderabad')">Hyderabad</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weather Display Card -->
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div id="weatherCard" class="custom-card" style="display: none;">
+          <div class="text-center">
+            <h2 id="cityName" class="mb-3 city-title">City Name</h2>
+            <div class="icon-container">
+              <img id="weatherIcon" class="weather-icon" src="" alt="Weather Icon" />
+            </div>
+          </div>
+
+          <div class="row text-center weather-details">
+            <div class="col-md-6 mb-3">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">Temperature</h5>
+                  <div class="d-flex justify-content-center align-items-center">
+                    <i class="fas fa-thermometer-half me-2"></i>
+                    <span id="temperature" class="temperature-value">--°C</span>
+                  </div>
+                  <small id="feelsLike" class="text-light">Feels like: --°C</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">Humidity</h5>
+                  <div class="d-flex justify-content-center align-items-center">
+                    <i class="fas fa-tint me-2"></i>
+                    <span id="humidity" class="temperature-value">--%</span>
+                  </div>
+                  <small id="windSpeed" class="text-light">Wind: -- m/s</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <p id="description" class="h5">Weather Description</p>
+            <small id="lastUpdate" class="text-light">Last updated: --:--</small>
+          </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="text-center mt-4">
+          <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="errorAlert" class="alert alert-danger mt-4" style="display: none;">
+          <i class="fas fa-exclamation-circle me-2"></i>
+          <span id="errorMessage"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Add event listener for Enter key on input
+    document.getElementById('cityInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        searchCity();
+      }
+    });
+
+    function searchCity(cityName = null) {
+      // Get city from input or parameter
+      const city = cityName || document.getElementById('cityInput').value.trim();
+
+      if (!city) {
+        showError('Please enter a city name');
+        return;
+      }
+
+      // Show loading spinner and hide other elements
+      document.getElementById('loadingSpinner').style.display = 'block';
+      document.getElementById('weatherCard').style.display = 'none';
+      document.getElementById('errorAlert').style.display = 'none';
+
+      fetchWeather(city);
+    }
+
+    async function fetchWeather(city) {
+      try {
+        const response = await fetch(`http://localhost:5000/get_weather?city=${encodeURIComponent(city)}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          updateWeatherUI(data);
+        } else {
+          throw new Error(data.error || 'Failed to fetch weather data');
+        }
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        document.getElementById('loadingSpinner').style.display = 'none';
+      }
+    }
+
+    function updateWeatherUI(data) {
+      // Show weather card
+      document.getElementById('weatherCard').style.display = 'block';
+
+      // Update weather information
+      document.getElementById('cityName').textContent = data.city;
+      document.getElementById('temperature').textContent = `${Math.round(data.temperature)}°C`;
+      document.getElementById('humidity').textContent = `${data.humidity}%`;
+      document.getElementById('description').textContent = capitalize(data.description);
+      document.getElementById('feelsLike').textContent = `Feels like: ${Math.round(data.feels_like)}°C`;
+      document.getElementById('windSpeed').textContent = `Wind: ${data.wind_speed} m/s`;
+
+      // Update weather icon
+      document.getElementById('weatherIcon').src = `http://openweathermap.org/img/wn/${data.icon}@2x.png`;
+
+      // Update last update time
+      const now = new Date();
+      document.getElementById('lastUpdate').textContent = `Last updated: ${now.toLocaleTimeString()}`;
+    }
+
+    function showError(message) {
+      document.getElementById('errorAlert').style.display = 'block';
+      document.getElementById('errorMessage').textContent = message;
+      document.getElementById('weatherCard').style.display = 'none';
+      document.getElementById('loadingSpinner').style.display = 'none';
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Initial weather fetch for London
+    searchCity('London');
+  </script>
+</body>
+
+</html>
